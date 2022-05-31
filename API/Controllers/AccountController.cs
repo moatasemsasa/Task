@@ -69,7 +69,7 @@ namespace API.Controllers
             {
                 username = user.UserName,
                 Token = await _itokenService.CreateToken(user),
-                Roles = await _userManager.GetRolesAsync(user) // await _userManager.GetRolesAsync(user).FirstOrDefault()
+                Role = await _userManager.GetRolesAsync(user) // await _userManager.GetRolesAsync(user).FirstOrDefault()
             };
         }
 

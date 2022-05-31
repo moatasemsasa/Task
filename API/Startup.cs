@@ -67,33 +67,32 @@ namespace API
                     ValidateAudience = false,
                 };
             });
-            //services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<DataContext>();
+
+
             
+            //services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<DataContext>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-                c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "basic",
                     In = ParameterLocation.Header,
-                    Description = "Basic Authorization header using the Bearer scheme."
+                    Description = "JSON Web Token to access resources. Example: Bearer {token}",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
                 });
+
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
                     {
+                        new OpenApiSecurityScheme
                         {
-                              new OpenApiSecurityScheme
-                                {
-                                    Reference = new OpenApiReference
-                                    {
-                                        Type = ReferenceType.SecurityScheme,
-                                        Id = "basic"
-                                    }
-                                },
-                                new string[] {}
-                        }
-                    });
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                        },
+                        new [] { string.Empty }
+                    }
+                });
             });
             
         }
