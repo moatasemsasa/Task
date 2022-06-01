@@ -3,8 +3,9 @@ import { authHeader } from '../_helpers';
 
 export const employeeService = {
     getAll,
-    delete: _delete
-}; 
+    delete: _delete,
+    createEmployee
+};
 
 
 
@@ -24,6 +25,18 @@ function _delete(id) {
     };
 
     return fetch(`${config.apiUrl}/api/Employees/deleteEmployee/${id}`, requestOptions).then(handleResponse);
+}
+
+
+function createEmployee(user) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...authHeader() },
+        body: JSON.stringify(user)
+    };
+
+    console.log(JSON.stringify(user))
+    return fetch(`${config.apiUrl}/api/Employees/add`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {

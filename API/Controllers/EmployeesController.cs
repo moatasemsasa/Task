@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeesController : ControllerBase
@@ -33,7 +33,7 @@ namespace API.Controllers
             await this.dataContext.SaveChangesAsync();
             return Employee;
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("deleteEmployee/{id}")]
         public async Task<Employee> DeleteEmployee(int id)
         {
@@ -45,7 +45,7 @@ namespace API.Controllers
             return Employee;
 
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateEmployee/{id}")]
         public async Task<IActionResult> UpdateEmployee(int id,[FromBody]Employee employee)
         {

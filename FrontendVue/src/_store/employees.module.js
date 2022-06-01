@@ -1,11 +1,13 @@
 import { employeeService } from '../_services';
-
+import { router } from '../_helpers';
 const state = {
-    all: {}
+    all: {},
+    status: {},
+    user: null
 };
 
 
-const actions =  {
+const actions = {
     getAll({ commit }) {
         commit('getAllRequest');
 
@@ -23,11 +25,31 @@ const actions =  {
                 user => commit('deleteSuccess', id),
                 error => commit('deleteFailure', { id, error: error.toString() })
             );
+    },
+    createEmployee({ dispatch, commit }, user) {
+        commit('EmployeeCreateRequest', user);
+
+        employeeService.createEmployee(user)
+            .then(
+                user => {
+                    commit('EmployeeCreatedSuccessfully', user);
+                    // router.push('/login');
+                    router.go()
+                    setTimeout(() => {
+                        // display success message after route change completes
+                        dispatch('alert/success', 'Employee Created Successfully', { root: true });
+                    })
+                },
+                error => {
+                    commit('EmployeeCreateFailure', error);
+                    dispatch('alert/error', error, { root: true });
+                }
+            );
     }
 }
 
 
-const mutations ={
+const mutations = {
     getAllRequest(state) {
         state.all = { loading: true };
     },
@@ -44,6 +66,15 @@ const mutations ={
                 ? { ...user, deleting: true }
                 : user
         )
+    },
+    EmployeeCreateRequest(state, user) {
+        state.status = { registering: true };
+    },
+    EmployeeCreatedSuccessfully(state, user) {
+        state.status = {};
+    },
+    EmployeeCreateFailure(state, error) {
+        state.status = {};
     },
     deleteSuccess(state, id) {
         // remove deleted user from state
